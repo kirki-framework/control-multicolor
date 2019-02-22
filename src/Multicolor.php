@@ -12,6 +12,7 @@
 namespace Kirki\Control;
 
 use Kirki\Control\Base;
+use Kirki\Core\Kirki;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
