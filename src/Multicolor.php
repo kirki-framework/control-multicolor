@@ -89,7 +89,6 @@ class Multicolor extends Base {
 			'kirki-control-multicolor',
 			"$url/assets/scripts/control.js",
 			[
-				'kirki-script',
 				'jquery',
 				'customize-base',
 			],
