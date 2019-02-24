@@ -48,6 +48,37 @@ class Multicolor extends Base {
 	public function enqueue() {
 		parent::enqueue();
 
+		$color_url = apply_filters(
+			'kirki_package_url_control_color',
+			trailingslashit( Kirki::$url ) . 'vendor/kirki-framework/control-color/src'
+		);
+
+		wp_enqueue_script(
+			'wp-color-picker-alpha',
+			"$color_url/assets/scripts/wp-color-picker-alpha.js",
+			[
+				'wp-color-picker'
+			],
+			KIRKI_VERSION,
+			true
+		);
+
+		wp_enqueue_style( 'wp-color-picker' );
+
+		// Enqueue the script.
+		wp_enqueue_script(
+			'kirki-control-color',
+			"$color_url/assets/scripts/control.js",
+			[
+				'jquery',
+				'customize-base',
+				'wp-color-picker-alpha',
+				'kirki-dynamic-control',
+			],
+			KIRKI_VERSION,
+			false
+		);
+
 		$url = apply_filters(
 			'kirki_package_url_control_multicolor',
 			trailingslashit( Kirki::$url ) . 'vendor/kirki-framework/control-multicolor/src'
