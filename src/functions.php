@@ -14,3 +14,5 @@ add_action(
         class_alias( 'Kirki\Control\Multicolor', 'Kirki_Control_Multicolor' );
     }
 );
+
+class_alias( 'Kirki\Field\Multicolor', 'Kirki_Field_Multicolor' );
