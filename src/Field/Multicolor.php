@@ -10,8 +10,8 @@
 
 namespace Kirki\Field;
 
-use Kirki\Core\Field;
-use Kirki\Field\Color;
+use Kirki;
+use Kirki\Field;
 
 /**
  * Field overrides.
@@ -21,60 +21,106 @@ use Kirki\Field\Color;
 class Multicolor extends Field {
 
 	/**
-	 * Sets the control type.
+	 * Extra logic for the field.
 	 *
-	 * @access protected
-	 * @since 1.0
-	 * @return void
-	 */
-	protected function set_type() {
-		$this->type = 'kirki-multicolor';
-	}
-
-	/**
-	 * Sets the $choices
+	 * Adds all sub-fields.
 	 *
-	 * @access protected
-	 * @since 1.0
-	 * @return void
+	 * @access public
+	 * @param array $args The arguments of the field.
 	 */
-	protected function set_choices() {
+	public function init( $args ) {
 
-		// Make sure choices are defined as an array.
-		if ( ! is_array( $this->choices ) ) {
-			$this->choices = [];
+		/**
+		 * Add a hidden field, the label & description.
+		 */
+		Kirki::add_field(
+			$args['kirki_config'],
+			wp_parse_args(
+				[
+					'type'        => 'kirki-generic',
+					'default'     => '',
+					'choices'     => [
+						'type' => 'hidden',
+					],
+				],
+				$args
+			)
+		);
+
+		foreach ( $args['choices'] as $choice => $choice_label ) {
+			Kirki::add_field(
+				$args['kirki_config'],
+				wp_parse_args(
+					[
+						'type'           => 'kirki-color',
+						'settings'       => $args['settings'] . '[' . $choice . ']',
+						'parent_setting' => $args['settings'],
+						'label'          => '',
+						'description'    => $choice_label,
+						'default'        => isset( $args['default'][ $choice ] ) ? $args['default'][ $choice ] : '',
+					],
+					$args
+				)
+			);
 		}
 	}
 
 	/**
-	 * Sets the $sanitize_callback
+	 * Filter arguments before creating the setting.
 	 *
-	 * @access protected
-	 * @since 1.0
-	 * @return void
+	 * @access public
+	 * @since 0.1
+	 * @param array                $args         The field arguments.
+	 * @param WP_Customize_Manager $wp_customize The customizer instance.
+	 * @return array
 	 */
-	protected function set_sanitize_callback() {
-		if ( empty( $this->sanitize_callback ) ) {
-			$this->sanitize_callback = [ $this, 'sanitize' ];
+	public function filter_setting_args( $args, $wp_customize ) {
+
+		if ( $args['settings'] !== $this->args['settings'] ) {
+			return $args;
 		}
+
+		// Set the sanitize-callback if none is defined.
+		if ( ! isset( $args['sanitize_callback'] ) || ! $args['sanitize_callback'] ) {
+			$args['sanitize_callback'] = [ __CLASS__, 'sanitize' ];
+		}
+		return $args;
 	}
 
 	/**
-	 * The method that will be used as a `sanitize_callback`.
+	 * Sanitizes background controls
 	 *
 	 * @static
 	 * @access public
 	 * @since 1.0
-	 * @param array $value The value to be sanitized.
-	 * @return array The value.
+	 * @param array $value The value.
+	 * @return array
 	 */
 	public static function sanitize( $value ) {
-		if ( ! is_array( $value ) ) {
-			return [];
-		}
-		foreach ( $value as $key => $val ) {
-			$value[ $key ] = Color::sanitize( $val );
+
+		foreach ( $value as $key => $subvalue ) {
+			$value[ $key ] = \Kirki\Field\Color::sanitize( $subvalue );
 		}
 		return $value;
 	}
+
+	/**
+	 * Override parent method. No need to register any setting.
+	 *
+	 * @access public
+	 * @since 0.1
+	 * @param WP_Customize_Manager $wp_customize The customizer instance.
+	 * @return void
+	 */
+	public function add_setting( $wp_customize ) {}
+
+	/**
+	 * Override the parent method. No need for a control.
+	 *
+	 * @access public
+	 * @since 0.1
+	 * @param WP_Customize_Manager $wp_customize The customizer instance.
+	 * @return void
+	 */
+	public function add_control( $wp_customize ) {}
 }

@@ -1,5 +1,5 @@
 {
-    "name": "kirki-framework/control-multicolor",
+    "name": "kirki-framework/field-multicolor",
     "type": "library",
     "description": "Multicolor control for the Kirki Customizer framework.",
     "keywords": ["wordpress","customizer","framework"],
