@@ -68,6 +68,9 @@ class Multicolor extends Field {
 						'description'    => $choice_label,
 						'default'        => $this->filter_preferred_choice_setting( 'default', $choice, $args ),
 						'input_attrs'    => $this->filter_preferred_choice_setting( 'input_attrs', $choice, $args ),
+						'choices'        => [
+							'alpha' => $this->filter_preferred_choice_setting( 'alpha', $choice, $args ),
+						],
 						'css_vars'       => [],
 						'output'         => [],
 					],
