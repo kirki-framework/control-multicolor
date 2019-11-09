@@ -47,9 +47,10 @@ class Multicolor extends Field {
 		new \Kirki\Field\Generic(
 			wp_parse_args(
 				[
-					'type'    => 'kirki-generic',
-					'default' => '',
-					'choices' => [
+					'type'        => 'kirki-generic',
+					'default'     => '',
+					'input_attrs' => '',
+					'choices'     => [
 						'type' => 'hidden',
 					],
 				],
